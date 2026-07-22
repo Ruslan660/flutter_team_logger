@@ -16,7 +16,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _log = log.copyWith(name: 'logs');
 
+  /// Guards the send button: a double tap must not start a second
+  /// export or a second share sheet.
+  bool _sendingLogs = false;
+
   Future<void> _sendLogs() async {
+    if (_sendingLogs) return;
+    setState(() => _sendingLogs = true);
+    try {
+      await _collectAndShare();
+    } finally {
+      if (mounted) setState(() => _sendingLogs = false);
+    }
+  }
+
+  Future<void> _collectAndShare() async {
     // Reference support flow: one immutable zip snapshot into the OS
     // share sheet (mail, messenger, support chat).
     final zip = await fileLogStorage.exportArchive();
@@ -66,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               ElevatedButton(
-                onPressed: _sendLogs,
-                child: const Text('Send logs'),
+                onPressed: _sendingLogs ? null : _sendLogs,
+                child: Text(_sendingLogs ? 'Collecting…' : 'Send logs'),
               ),
             ],
           ),
