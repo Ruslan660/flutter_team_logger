@@ -17,7 +17,10 @@ void main() {
 
   /// Creates chunk files for a fake session started [age] before [now].
   String session(Duration age, {int chunks = 1, int chunkSize = 10}) {
-    final id = sessionIdFrom(now.subtract(age), age.inMinutes.toRadixString(16).padLeft(4, '0'));
+    final id = sessionIdFrom(
+      now.subtract(age),
+      age.inMinutes.toRadixString(16).padLeft(4, '0'),
+    );
     for (var part = 0; part < chunks; part++) {
       File('${dir.path}/${chunkFileName(id, part)}')
           .writeAsStringSync('x' * chunkSize);
@@ -34,8 +37,7 @@ void main() {
     final old = session(const Duration(days: 8), chunks: 3);
     final fresh = session(const Duration(hours: 1));
 
-    await applyRetention(dir, options,
-        currentSessionId: 'none', now: now);
+    await applyRetention(dir, options, currentSessionId: 'none', now: now);
 
     expect(names().where((n) => n.contains(old)), isEmpty);
     expect(names().where((n) => n.contains(fresh)), hasLength(1));
@@ -47,8 +49,7 @@ void main() {
     }
     final current = session(Duration.zero);
 
-    await applyRetention(dir, options,
-        currentSessionId: current, now: now);
+    await applyRetention(dir, options, currentSessionId: current, now: now);
 
     final left = names();
     expect(left, hasLength(11)); // 10 past + current

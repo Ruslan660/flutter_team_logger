@@ -1,6 +1,6 @@
 import 'package:team_logger/team_logger.dart';
 
-/// Limits and policies for [FileLogStorage].
+/// Limits and policies for `FileLogStorage`.
 ///
 /// Defaults are sized for mobile support logs: a session is capped at 2 MiB,
 /// the whole log directory at 20 MiB, and nothing older than a week survives.

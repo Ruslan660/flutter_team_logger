@@ -40,8 +40,6 @@ void main() {
         // A single record must fit into a chunk.
         () => FileLogStorageOptions(
           maxSessionBytes: 64 * 1024,
-          chunksPerSession: 4,
-          maxRecordBytes: 32 * 1024,
         ),
         throwsA(isA<AssertionError>()),
       );

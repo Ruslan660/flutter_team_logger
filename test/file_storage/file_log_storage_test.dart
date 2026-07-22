@@ -57,7 +57,6 @@ void main() {
       directory: dir,
       options: const FileLogStorageOptions(
         maxSessionBytes: 4 * 1024,
-        chunksPerSession: 4,
         maxRecordBytes: 512,
       ),
     );
@@ -97,7 +96,6 @@ void main() {
       directory: dir,
       options: const FileLogStorageOptions(
         maxSessionBytes: 4 * 1024,
-        chunksPerSession: 4,
         maxRecordBytes: 512,
       ),
     );
