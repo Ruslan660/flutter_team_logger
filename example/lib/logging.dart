@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:ansi_escape_codes/style.dart' as ansi;
 import 'package:team_logger/team_logger.dart';
+import 'package:team_logger/team_logger_io.dart';
 
 final theme = LogMainTheme.defaultActiveTheme;
 final uiTheme = theme.copyWith(
@@ -7,6 +10,11 @@ final uiTheme = theme.copyWith(
 );
 
 final logStorage = LogStorage(maxCount: 1000);
+
+final fileLogStorage = FileLogStorage(
+  directory: Directory('${Directory.systemTemp.path}/team_logger_example'),
+  sessionMeta: const {'app': 'example', 'version': '0.3.0'},
+);
 
 final log = Logger('app')
   ..publisher = MultiPublisher([
@@ -35,4 +43,5 @@ final log = Logger('app')
     //   ],
     // ),
     logStorage,
+    fileLogStorage,
   ]);

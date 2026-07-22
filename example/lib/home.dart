@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_team_logger/flutter_team_logger.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'logging.dart';
 
@@ -14,6 +15,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _log = log.copyWith(name: 'logs');
+
+  Future<void> _sendLogs() async {
+    // Reference support flow: one immutable zip snapshot into the OS
+    // share sheet (mail, messenger, support chat).
+    final zip = await fileLogStorage.exportArchive();
+    if (!mounted || zip == null) return;
+
+    final box = context.findRenderObject() as RenderBox?;
+    await Share.shareXFiles(
+      [XFile(zip.path)],
+      subject: 'App logs',
+      // Required by the iPad/macOS share popover.
+      sharePositionOrigin:
+          box == null ? null : box.localToGlobal(Offset.zero) & box.size,
+    );
+  }
 
   Future<void> _showLogs() async {
     await Navigator.push(
@@ -47,6 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   stream: logStorage.onChanged,
                   builder: (_, __) => Text('Logs (${logStorage.count})'),
                 ),
+              ),
+              ElevatedButton(
+                onPressed: _sendLogs,
+                child: const Text('Send logs'),
               ),
             ],
           ),

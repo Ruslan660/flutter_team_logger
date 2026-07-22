@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_team_logger/flutter_team_logger.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:team_logger/team_logger.dart';
 import 'package:window_manager/window_manager.dart';
@@ -59,6 +60,7 @@ Future<void> main() async {
   await Chain.capture(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      FileLogFlushObserver(fileLogStorage).attach();
       await windowManager.ensureInitialized();
 
       const windowOptions = WindowOptions(
